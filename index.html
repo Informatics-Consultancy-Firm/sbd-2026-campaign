@@ -413,21 +413,21 @@ function startCaps(){
   rec.onresult=function(ev){ failCount=0; onResult(ev); };
   rec.onstart=function(){ startedAt=Date.now(); setStatus("Listening \u2014 speak in English"); };
   rec.onerror=function(e){
-    if(e.error==="no-speech"||e.error==="aborted") return;
+    if(e.error==="no-speech"||e.error==="aborted") return;      // benign
+    if(e.error==="network"){ setStatus("Reconnecting\u2026"); return; }  // transient: let onend restart
     capOn=false;
     var msg={
       "not-allowed":"Microphone blocked. Click the lock/mic icon in the address bar \u2192 Allow, on an https:// page.",
       "service-not-allowed":"Speech service blocked. Use https:// and allow the microphone.",
-      "network":"No internet connection \u2014 speech recognition needs to be online.",
       "audio-capture":"No microphone found. Check it's connected and selected."
     }[e.error] || ("Microphone error: "+e.error);
     setStatus(msg); resetBtn();
   };
   rec.onend=function(){
     if(!capOn) return;
-    if(Date.now()-startedAt < 600){ failCount++; }         // ended almost instantly = failing
-    if(failCount>=3){ capOn=false; setStatus("Can't keep the mic on. Open the page over https:// in Chrome/Edge and allow the microphone."); resetBtn(); return; }
-    setTimeout(function(){ if(capOn){ try{ rec.start(); }catch(e){} } }, 400);
+    if(Date.now()-startedAt < 400) failCount++; else failCount=0;   // only count truly instant fails
+    if(failCount>=6){ capOn=false; setStatus("Speech service unavailable. Check connection, then press Start."); resetBtn(); return; }
+    setTimeout(function(){ if(capOn){ try{ rec.start(); }catch(e){} } }, 500);
   };
   capOn=true; panEl.en.classList.add("recording"); panEl.fr.classList.add("recording");
   capBtn.textContent="\u25A0 Stop captions"; capBtn.classList.add("live");
