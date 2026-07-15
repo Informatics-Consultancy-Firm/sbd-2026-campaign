@@ -84,6 +84,7 @@
   .sub-card .step{font:700 10px var(--disp);letter-spacing:.1em;color:var(--muted);}
   .sub-card h4{font:600 16px/1.2 var(--disp);margin:4px 0 6px;}
   .sub-card p{font:400 11.5px/1.5 var(--body);color:var(--muted);margin-bottom:13px;}
+  .sub-card .btn{margin-top:auto;}
   .sub-card .btn{border:none;border-radius:11px;padding:12px 14px;font:600 13px var(--body);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s,filter .2s;}
   .sub-card .btn:active{transform:translateY(1px);}
   .btn-navy{background:var(--navy);color:#fff;} .btn-gold{background:var(--gold);color:var(--navy-900);}
@@ -113,6 +114,11 @@
   .panel-body .line:last-child{border-bottom:none;}
   .panel-body .line.interim{color:var(--muted);font-weight:400;font-style:italic;border-bottom:none;}
   .panel-fr .panel-body .line{color:var(--navy-900);}
+  .cursor{position:absolute;width:24px;height:24px;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;opacity:0;transition:opacity .18s;z-index:40;box-shadow:0 0 0 3px rgba(255,255,255,.7),0 3px 8px rgba(0,0,0,.25);}
+  .cursor::after{content:"";position:absolute;left:50%;top:50%;width:5px;height:5px;border-radius:50%;transform:translate(-50%,-50%);background:currentColor;}
+  .cursor-en{color:#1c66c9;background:rgba(28,102,201,.28);border:2.5px solid #1c66c9;}
+  .cursor-fr{color:#d1495b;background:rgba(209,73,91,.28);border:2.5px solid #d1495b;}
+  .cursor.on{opacity:1;}
   @media(max-width:900px){ .live-layout{flex-wrap:wrap;} .panel{flex:1 1 100%;max-width:none;order:3;min-height:150px;max-height:34vh;} }
   .controls{margin-top:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;}
   .cap-btn{background:var(--navy);color:#fff;border:none;border-radius:12px;padding:13px 22px;font:600 14px var(--body);cursor:pointer;box-shadow:var(--sh-sm);transition:filter .2s,transform .08s;}
@@ -138,6 +144,7 @@
           <div class="home-link" id="back-L">&#8592; Modules</div>
         </header>
         <div class="body" id="scroll-L"><div id="view-L"></div><footer id="foot-L"></footer></div>
+        <div class="cursor cursor-en" id="cur-L"></div>
       </div></div>
     </div>
     <div class="col">
@@ -149,6 +156,7 @@
           <div class="home-link" id="back-R">&#8592; Modules</div>
         </header>
         <div class="body" id="scroll-R"><div id="view-R"></div><footer id="foot-R"></footer></div>
+        <div class="cursor cursor-fr" id="cur-R"></div>
       </div></div>
     </div>
   </div>
@@ -236,22 +244,22 @@ function homeHTML(lang){
   var t=T[lang];
   var cards=MODULES.map(function(m,i){
     var mm=m[lang];
-    return '<div class="mod" onclick="goModule('+i+')"><div class="body2">'+
+    return '<div class="mod sa" data-sync="mod-'+i+'" onclick="goModule('+i+')"><div class="body2">'+
       '<div class="num">MODULE '+String(i+1).padStart(2,"0")+'</div>'+
-      '<h3>'+esc(mm.title)+'</h3><p>'+esc(mm.desc)+'</p>'+
-      '<div class="foot"><span class="sub">'+t.subCount+'</span><span class="go">'+t.open+' '+IC.arrow+'</span></div>'+
+      '<h3 data-sync="modt-'+i+'">'+esc(mm.title)+'</h3><p data-sync="modd-'+i+'">'+esc(mm.desc)+'</p>'+
+      '<div class="foot"><span class="sub">'+t.subCount+'</span><span class="go" data-sync="open-'+i+'">'+t.open+' '+IC.arrow+'</span></div>'+
     '</div></div>';
   }).join("");
-  return '<section class="hero">'+
-    '<span class="tag"><span class="g"></span>'+esc(t.tag)+'</span>'+
-    '<h1>'+esc(t.h1a)+'<span>'+esc(t.h1b)+'</span></h1>'+
-    '<p>'+esc(t.heroP)+'</p>'+
+  return '<section class="hero sa">'+
+    '<span class="tag" data-sync="herotag"><span class="g"></span>'+esc(t.tag)+'</span>'+
+    '<h1 data-sync="herotitle">'+esc(t.h1a)+'<span>'+esc(t.h1b)+'</span></h1>'+
+    '<p data-sync="herop">'+esc(t.heroP)+'</p>'+
     '<div class="stats">'+
       '<div class="st"><div class="v">'+MODULES.length+'</div><div class="k">'+t.statK[0]+'</div></div>'+
       '<div class="st"><div class="v">4</div><div class="k">'+t.statK[1]+'</div></div>'+
       '<div class="st"><div class="v">'+t.live+'</div><div class="k">'+t.statK[2]+'</div></div>'+
     '</div></section>'+
-    '<div class="wrap"><div class="sec-head"><h2>'+t.modules+'</h2><span class="bar"></span><span class="count">'+MODULES.length+'</span></div>'+
+    '<div class="wrap"><div class="sec-head"><h2 data-sync="modhead">'+t.modules+'</h2><span class="bar"></span><span class="count">'+MODULES.length+'</span></div>'+
     '<div class="grid">'+cards+'</div></div>';
 }
 
@@ -259,12 +267,12 @@ function moduleHTML(lang,i){
   var t=T[lang], m=MODULES[i], mm=m[lang];
   var subs=SUBS.map(function(s){
     var ss=s[lang];
-    return '<div class="sub-card"><div class="ic '+s.ic+'">'+IC[s.ic]+'</div>'+
-      '<div class="step">'+esc(ss.step)+'</div><h4>'+esc(ss.title)+'</h4><p>'+esc(ss.desc)+'</p>'+
-      '<button class="btn '+s.cls+'" onclick="openSub(\''+s.key+'\','+i+',this)">'+esc(ss.btn)+'</button></div>';
+    return '<div class="sub-card sa" data-sync="sub-'+s.key+'"><div class="ic '+s.ic+'">'+IC[s.ic]+'</div>'+
+      '<div class="step">'+esc(ss.step)+'</div><h4 data-sync="subt-'+s.key+'">'+esc(ss.title)+'</h4><p data-sync="subd-'+s.key+'">'+esc(ss.desc)+'</p>'+
+      '<button class="btn '+s.cls+'" data-sync="subbtn-'+s.key+'" onclick="openSub(\''+s.key+'\','+i+',this)">'+esc(ss.btn)+'</button></div>';
   }).join("");
   return '<div class="wrap"><div class="detail">'+
-    '<div class="dhero"><div class="num">MODULE '+String(i+1).padStart(2,"0")+'</div><h2>'+esc(mm.title)+'</h2><p>'+esc(mm.desc)+'</p></div>'+
+    '<div class="dhero sa" data-sync="dhero"><div class="num">MODULE '+String(i+1).padStart(2,"0")+'</div><h2 data-sync="dtitle">'+esc(mm.title)+'</h2><p data-sync="ddesc">'+esc(mm.desc)+'</p></div>'+
     '<div class="subs">'+subs+
       '<div class="player"><div class="pbar"><span>'+t.videoWord+' \u00B7 '+esc(mm.title)+'</span><button onclick="closePlayer(this)">'+t.close+' \u00D7</button></div><video controls preload="metadata"></video></div>'+
     '</div></div></div>';
@@ -273,8 +281,24 @@ function moduleHTML(lang,i){
 function renderHome(side){ side.view.innerHTML=homeHTML(side.lang); side.back.classList.remove("show"); }
 function renderModule(side,i){ side.view.innerHTML=moduleHTML(side.lang,i); side.back.classList.add("show"); }
 
-function goHome(){ ["L","R"].forEach(function(k){renderHome(sides[k]); sides[k].scroll.scrollTop=0;}); }
-function goModule(i){ ["L","R"].forEach(function(k){renderModule(sides[k],i); sides[k].scroll.scrollTop=0;}); }
+function goHome(){ ["L","R"].forEach(function(k){renderHome(sides[k]); sides[k].scroll.scrollTop=0;}); afterRender(); }
+function goModule(i){ ["L","R"].forEach(function(k){renderModule(sides[k],i); sides[k].scroll.scrollTop=0;}); afterRender(); }
+function afterRender(){ requestAnimationFrame(function(){ equalizeCards(); requestAnimationFrame(equalizeCards); }); }
+
+/* make each English/French twin block the same height so sections line up */
+function equalizeCards(){
+  var s=document.querySelectorAll(".screen"); if(s.length<2) return;
+  var A=s[0].querySelectorAll(".sa"), B=s[1].querySelectorAll(".sa");
+  if(!A.length || A.length!==B.length) return;
+  for(var i=0;i<A.length;i++){ A[i].style.minHeight="0px"; B[i].style.minHeight="0px"; }
+  for(var j=0;j<A.length;j++){
+    var h=Math.max(A[j].offsetHeight, B[j].offsetHeight);
+    A[j].style.minHeight=h+"px"; B[j].style.minHeight=h+"px";
+  }
+}
+var _eqT; window.addEventListener("resize",function(){ clearTimeout(_eqT); _eqT=setTimeout(equalizeCards,150); });
+if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ equalizeCards(); }); }
+window.addEventListener("load", function(){ setTimeout(equalizeCards, 200); });
 
 function openSub(key,i,btn){
   var m=MODULES[i];
@@ -298,11 +322,27 @@ sides.R.foot.innerHTML="\u00A9 "+YR+" <b>ICF-SL</b> \u00B7 "+T.fr.footer;
 
 /* ---------- synced scrolling ---------- */
 var lock=false;
+function anchTops(sc){
+  var base=sc.getBoundingClientRect().top, st=sc.scrollTop;
+  return Array.prototype.map.call(sc.querySelectorAll(".sa"),function(el){
+    return el.getBoundingClientRect().top - base + st;
+  });
+}
+function maxScroll(sc){ return Math.max(0, sc.scrollHeight - sc.clientHeight); }
 function mirror(from,to){
   if(lock) return; lock=true;
-  var d=(from.scrollHeight-from.clientHeight)||1;
-  var ratio=from.scrollTop/d;
-  to.scrollTop=ratio*((to.scrollHeight-to.clientHeight)||0);
+  var a=anchTops(from), b=anchTops(to);
+  if(a.length && a.length===b.length){
+    var y=from.scrollTop, idx=0;
+    for(var i=0;i<a.length;i++){ if(a[i]<=y+2) idx=i; else break; }
+    var aNext=(idx+1<a.length)?a[idx+1]:maxScroll(from);
+    var bNext=(idx+1<b.length)?b[idx+1]:maxScroll(to);
+    var span=(aNext-a[idx])||1;
+    var frac=Math.max(0,Math.min(1,(y-a[idx])/span));
+    to.scrollTop = b[idx] + frac*(bNext-b[idx]);
+  } else {
+    var d=maxScroll(from)||1; to.scrollTop=(from.scrollTop/d)*maxScroll(to);
+  }
   requestAnimationFrame(function(){lock=false;});
 }
 sides.L.scroll.addEventListener("scroll",function(){mirror(sides.L.scroll,sides.R.scroll);});
@@ -403,6 +443,40 @@ function stopCaps(){
   resetBtn(); setStatus("");
 }
 capBtn.onclick=function(){ capOn?stopCaps():startCaps(); };
+
+/* ---------- mirrored pointers: follow the matching word/section ---------- */
+(function(){
+  var screens=document.querySelectorAll(".screen");
+  if(screens.length<2) return;
+  var cur=[document.getElementById("cur-L"), document.getElementById("cur-R")];
+  function setCur(k,x,y){ cur[k].style.left=x+"px"; cur[k].style.top=y+"px"; cur[k].classList.add("on"); }
+  function hide(){ cur[0].classList.remove("on"); cur[1].classList.remove("on"); }
+  function relTwin(host,e,twin,os){
+    var hr=host.getBoundingClientRect();
+    var fx=(e.clientX-hr.left)/(hr.width||1), fy=(e.clientY-hr.top)/(hr.height||1);
+    fx=Math.max(0,Math.min(1,fx)); fy=Math.max(0,Math.min(1,fy));
+    var tr=twin.getBoundingClientRect(), sr=os.getBoundingClientRect();
+    return { x:Math.max(10,Math.min(os.clientWidth-10,  tr.left-sr.left+fx*tr.width)),
+             y:Math.max(10,Math.min(os.clientHeight-10, tr.top -sr.top +fy*tr.height)) };
+  }
+  for(var i=0;i<2;i++){
+    (function(idx){
+      var s=screens[idx], other=idx===0?1:0, os=screens[other];
+      s.addEventListener("mousemove",function(e){
+        var sr=s.getBoundingClientRect();
+        setCur(idx, e.clientX-sr.left, e.clientY-sr.top);              // real pointer
+        var host=e.target && e.target.closest ? e.target.closest("[data-sync]") : null;
+        if(host){
+          var twin=os.querySelector('[data-sync="'+host.getAttribute("data-sync")+'"]');
+          if(twin){ var c=relTwin(host,e,twin,os); setCur(other,c.x,c.y); return; }  // proportional within twin
+        }
+        var rx=(e.clientX-sr.left)/sr.width, ry=(e.clientY-sr.top)/sr.height;         // fallback
+        setCur(other, rx*os.clientWidth, ry*os.clientHeight);
+      });
+      s.addEventListener("mouseleave",hide);
+    })(i);
+  }
+})();
 
 goHome();
 </script>
