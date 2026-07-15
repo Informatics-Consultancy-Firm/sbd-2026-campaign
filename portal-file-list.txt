@@ -1,0 +1,115 @@
+ICF-SL PORTAL — FOLDER PER MODULE
+========================================
+
+Each module has its OWN folder next to icf-sl-portal.html.
+Inside every folder, use these EXACT 4 file names:
+   presentation.pptx      (sub-module 1)
+   video.mp4              (sub-module 2)
+   assessment.html        (sub-module 3)
+   data-collection.html   (sub-module 4)
+
+========================================
+
+MODULE 1: Campaign Overview and Strategy   ->  folder: campaign-overview-and-strategy/
+   campaign-overview-and-strategy/presentation.pptx
+   campaign-overview-and-strategy/video.mp4
+   campaign-overview-and-strategy/assessment.html
+   campaign-overview-and-strategy/data-collection.html
+
+MODULE 2: Distribution   ->  folder: distribution/
+   distribution/presentation.pptx
+   distribution/video.mp4
+   distribution/assessment.html
+   distribution/data-collection.html
+
+MODULE 3: Monitoring   ->  folder: monitoring/
+   monitoring/presentation.pptx
+   monitoring/video.mp4
+   monitoring/assessment.html
+   monitoring/data-collection.html
+
+MODULE 4: ITN Movement   ->  folder: itn-movement/
+   itn-movement/presentation.pptx
+   itn-movement/video.mp4
+   itn-movement/assessment.html
+   itn-movement/data-collection.html
+
+MODULE 5: ITN Received   ->  folder: itn-received/
+   itn-received/presentation.pptx
+   itn-received/video.mp4
+   itn-received/assessment.html
+   itn-received/data-collection.html
+
+MODULE 6: Attendance   ->  folder: attendance/
+   attendance/presentation.pptx
+   attendance/video.mp4
+   attendance/assessment.html
+   attendance/data-collection.html
+
+MODULE 7: ID Cards   ->  folder: id-cards/
+   id-cards/presentation.pptx
+   id-cards/video.mp4
+   id-cards/assessment.html
+   id-cards/data-collection.html
+
+MODULE 8: Device Tag   ->  folder: device-tag/
+   device-tag/presentation.pptx
+   device-tag/video.mp4
+   device-tag/assessment.html
+   device-tag/data-collection.html
+
+MODULE 9: School QR Code   ->  folder: school-qr-code/
+   school-qr-code/presentation.pptx
+   school-qr-code/video.mp4
+   school-qr-code/assessment.html
+   school-qr-code/data-collection.html
+
+MODULE 10: Reconciliation   ->  folder: reconciliation/
+   reconciliation/presentation.pptx
+   reconciliation/video.mp4
+   reconciliation/assessment.html
+   reconciliation/data-collection.html
+
+========================================
+FLAT LIST — all 40 files
+========================================
+campaign-overview-and-strategy/presentation.pptx
+campaign-overview-and-strategy/video.mp4
+campaign-overview-and-strategy/assessment.html
+campaign-overview-and-strategy/data-collection.html
+distribution/presentation.pptx
+distribution/video.mp4
+distribution/assessment.html
+distribution/data-collection.html
+monitoring/presentation.pptx
+monitoring/video.mp4
+monitoring/assessment.html
+monitoring/data-collection.html
+itn-movement/presentation.pptx
+itn-movement/video.mp4
+itn-movement/assessment.html
+itn-movement/data-collection.html
+itn-received/presentation.pptx
+itn-received/video.mp4
+itn-received/assessment.html
+itn-received/data-collection.html
+attendance/presentation.pptx
+attendance/video.mp4
+attendance/assessment.html
+attendance/data-collection.html
+id-cards/presentation.pptx
+id-cards/video.mp4
+id-cards/assessment.html
+id-cards/data-collection.html
+device-tag/presentation.pptx
+device-tag/video.mp4
+device-tag/assessment.html
+device-tag/data-collection.html
+school-qr-code/presentation.pptx
+school-qr-code/video.mp4
+school-qr-code/assessment.html
+school-qr-code/data-collection.html
+reconciliation/presentation.pptx
+reconciliation/video.mp4
+reconciliation/assessment.html
+reconciliation/data-collection.html
