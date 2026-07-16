@@ -107,6 +107,37 @@ body{font-family:'Oswald',sans-serif;background:var(--gray);min-height:100vh;col
 .sync-pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.65rem;font-weight:700}
 .sync-pill.ok{background:#e8f5ee;color:var(--green)}
 .sync-pill.pend{background:#fff8e1;color:#8a6500}
+/* CERTIFICATE */
+.cert-overlay{display:none;position:fixed;inset:0;background:rgba(0,20,50,.72);z-index:9000;overflow-y:auto;padding:20px 12px}
+.cert-overlay.show{display:block}
+.cert-scroll{max-width:780px;margin:0 auto}
+#certificate{background:#fff;border:4px solid var(--gold);border-radius:6px;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+.cert-inner{border:2px solid var(--navy);margin:9px;padding:30px 34px 24px;text-align:center}
+.cert-seal{width:62px;height:62px;margin:0 auto 10px;background:linear-gradient(135deg,var(--navy),var(--navy3));border:3px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem}
+.cert-org{font-size:.74rem;letter-spacing:2px;color:var(--navy);font-weight:700;text-transform:uppercase}
+.cert-org2{font-size:.62rem;letter-spacing:1.5px;color:#607080;text-transform:uppercase;margin-top:3px}
+.cert-title{font-size:1.85rem;font-weight:700;color:var(--navy);letter-spacing:3px;margin:16px 0 2px;text-transform:uppercase}
+.cert-rule{width:120px;height:3px;background:var(--gold);margin:8px auto 16px}
+.cert-lead{font-size:.8rem;color:#607080;letter-spacing:.5px}
+.cert-name{font-size:1.8rem;font-weight:700;color:#1a2533;margin:8px 0 3px;border-bottom:2px solid var(--border);display:inline-block;padding:0 24px 6px}
+.cert-role{font-size:.85rem;color:#607080;margin-bottom:14px}
+.cert-body{font-size:.9rem;color:#3a4a5a;line-height:1.6;max-width:520px;margin:0 auto}
+.cert-score{font-size:1.15rem;font-weight:700;color:var(--green);margin:14px 0;letter-spacing:.5px}
+.cert-foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:26px;gap:24px}
+.cert-sign{flex:1;text-align:center}
+.cert-sign-line{border-top:2px solid var(--navy);padding-top:5px;font-size:.66rem;color:#607080;letter-spacing:1px;text-transform:uppercase}
+.cert-meta{font-size:.62rem;color:#98a4b3;margin-top:18px;letter-spacing:.5px}
+.cert-actions{max-width:780px;margin:14px auto 0;display:flex;gap:10px}
+.cert-actions .btn{width:auto;flex:1}
+@media print{
+  @page{size:landscape;margin:12mm}
+  body{background:#fff}
+  body *{visibility:hidden}
+  #certificate,#certificate *{visibility:visible;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .cert-overlay{background:#fff!important;padding:0;position:absolute;inset:auto;top:0;left:0;width:100%}
+  #certificate{position:absolute;left:0;top:0;width:100%;box-shadow:none}
+  .no-print{display:none!important}
+}
 </style>
 </head>
 <body>
@@ -118,7 +149,7 @@ body{font-family:'Oswald',sans-serif;background:var(--gray);min-height:100vh;col
     <h1>SBD 2026 — ATTENDANCE ASSESSMENT</h1>
     <p>ICF-SL · National Malaria Control Programme</p>
   </div>
-  <div class="hdr-timer" id="hdrTimer">05:00</div>
+  <div class="hdr-timer" id="hdrTimer">10:00</div>
 </div>
 
 <!-- TABS -->
@@ -189,6 +220,9 @@ body{font-family:'Oswald',sans-serif;background:var(--gray);min-height:100vh;col
       <div class="stat-box"><div class="stat-val" id="statWrong" style="color:var(--red)">0</div><div class="stat-lbl">Wrong</div></div>
       <div class="stat-box"><div class="stat-val" id="statPct" style="color:var(--navy)">0%</div><div class="stat-lbl">Score</div></div>
     </div>
+    <div id="certBtnWrap" style="display:none;margin-bottom:16px;">
+      <button class="btn btn-gold" onclick="openCert()" style="font-size:1rem;">🎓 GET / PRINT CERTIFICATE</button>
+    </div>
     <div class="review-title">📋 REVIEW YOUR ANSWERS</div>
     <div id="reviewList"></div>
     <div style="margin-top:14px;background:#f0f4f8;border-radius:10px;padding:14px;text-align:center;font-size:.82rem;color:#607080;">
@@ -233,14 +267,43 @@ body{font-family:'Oswald',sans-serif;background:var(--gray);min-height:100vh;col
   </div>
 </div>
 
+<!-- CERTIFICATE -->
+<div class="cert-overlay" id="certModal">
+  <div class="cert-scroll">
+    <div id="certificate">
+      <div class="cert-inner">
+        <div class="cert-seal">🛡️</div>
+        <div class="cert-org">Informatics Consultancy Firm — Sierra Leone</div>
+        <div class="cert-org2">National Malaria Control Programme · SBD 2026</div>
+        <div class="cert-title">Certificate of Completion</div>
+        <div class="cert-rule"></div>
+        <div class="cert-lead">This is to certify that</div>
+        <div class="cert-name" id="certName">—</div>
+        <div class="cert-role" id="certRole">—</div>
+        <div class="cert-body">has successfully completed the <strong>SBD 2026 Attendance Assessment</strong> and demonstrated understanding of the attendance and payment procedures.</div>
+        <div class="cert-score" id="certScore">Score: 0 / 10 (0%)</div>
+        <div class="cert-foot">
+          <div class="cert-sign"><div class="cert-sign-line">Supervisor</div></div>
+          <div class="cert-sign"><div class="cert-sign-line">NMCP / ICF-SL</div></div>
+        </div>
+        <div class="cert-meta" id="certMeta">Issued —</div>
+      </div>
+    </div>
+    <div class="cert-actions no-print">
+      <button class="btn btn-gold" onclick="window.print()">🖨 PRINT / SAVE AS PDF</button>
+      <button class="btn" onclick="closeCert()" style="background:#607080;">CLOSE</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ═══════════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════════
 const GAS_URL        = 'https://script.google.com/macros/s/AKfycbymRy-M5v0fVLWUjw4IXYhd1oIR2ZvnP_Dzr_iGR-Th0cMIpmE2ntGeujWYH7-C6NHIzA/exec';
 const ADMIN_PASSWORD = 'admin123';
-const TOTAL_MINUTES  = 5;   // time limit
-const PASS_SCORE     = 3;   // correct answers needed to pass (out of 5). Set to 5 for 100%.
+const TOTAL_MINUTES  = 10;  // time limit
+const PASS_SCORE     = 10;  // correct answers needed to pass (out of 10) — 100% required
 
 // ═══════════════════════════════════════════
 // 5 QUESTIONS — attendance & payment process
@@ -250,7 +313,12 @@ const QUESTIONS = [
   { q:"How long after signing in must you wait before you are allowed to sign out?", opts:["No waiting — sign out anytime","30 minutes","1 hour","4 hours"], ans:2, exp:"The app locks the sign-out button for 1 hour after you sign in." },
   { q:"To be recorded as a FULL DAY and be eligible for payment, what must you do?", opts:["Only sign in","Only sign out","Both sign in AND sign out","Just be on the team list"], ans:2, exp:"A FULL DAY needs both a sign-in and a sign-out record — payment depends on both." },
   { q:"What is used as each team member's unique ID in the app?", opts:["Full name","Telephone number","District","Role"], ans:1, exp:"The 9-digit telephone number is the unique ID and blocks duplicate registration." },
-  { q:"If you sign in while there is no internet, what happens to your record?", opts:["Sign-in fails and nothing is saved","It is saved on the device and kept locally","You lose your record","You must restart the app"], ans:1, exp:"Records save to the device even offline, so no data is lost when there is no internet." }
+  { q:"If you sign in while there is no internet, what happens to your record?", opts:["Sign-in fails and nothing is saved","It is saved on the device and kept locally","You lose your record","You must restart the app"], ans:1, exp:"Records save to the device even offline, so no data is lost when there is no internet." },
+  { q:"How is a person added to the team before they can sign in?", opts:["They are added automatically","A supervisor registers their name, phone, role and district","They scan a QR code only","They send an email"], ans:1, exp:"Each member is registered with full name, telephone, role and district before they can sign in." },
+  { q:"Can the same telephone number be registered more than once?", opts:["Yes, any number of times","No — each phone number must be unique","Only on a different day","Only with supervisor approval"], ans:1, exp:"The phone number is the unique ID, so duplicate registrations are blocked." },
+  { q:"Which tab shows the day's summary of who signed in and out?", opts:["TEAM","SIGN IN","STATS","ADD MEMBER"], ans:2, exp:"The STATS tab shows the daily summary of attendance." },
+  { q:"When does the day's team list reset?", opts:["It never resets","Automatically at the start of each new day","Only when cleared manually","Every hour"], ans:1, exp:"The list resets automatically each new day so records stay day-by-day." },
+  { q:"Who can open the attendance / grades records dashboard?", opts:["Anyone with the app","Only a supervisor with the password","Only head office","Only distributors"], ans:1, exp:"The records dashboard is protected by a supervisor password." }
 ];
 
 // ═══════════════════════════════════════════
@@ -263,6 +331,7 @@ let adminLoggedIn = false;
 let timerInterval = null;
 let secondsLeft   = TOTAL_MINUTES * 60;
 let quizStartTime = null;
+let lastGrade     = null;
 
 // Fill welcome info boxes from config
 document.getElementById('infoQ').textContent    = QUESTIONS.length;
@@ -413,8 +482,28 @@ function finishQuiz(timedOut) {
     </div>`;
   }).join('');
 
+  // Certificate available only when passed
+  lastGrade = grade;
+  document.getElementById('certBtnWrap').style.display = pass ? 'block' : 'none';
+
   showScreen('result');
 }
+
+// ═══════════════════════════════════════════
+// CERTIFICATE
+// ═══════════════════════════════════════════
+function openCert() {
+  if (!lastGrade) return;
+  document.getElementById('certName').textContent  = lastGrade.name;
+  document.getElementById('certRole').textContent  = 'Role: ' + lastGrade.role;
+  document.getElementById('certScore').textContent = `Score: ${lastGrade.correct} / ${lastGrade.total} (${lastGrade.pct}%)`;
+  const d = new Date(lastGrade.timestamp);
+  const certId = 'ICF-SBD-' + String(lastGrade.timestamp).slice(-6);
+  document.getElementById('certMeta').textContent =
+    'Issued ' + d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) + '  ·  Certificate No. ' + certId;
+  document.getElementById('certModal').classList.add('show');
+}
+function closeCert() { document.getElementById('certModal').classList.remove('show'); }
 
 // ═══════════════════════════════════════════
 // GAS SUBMIT
