@@ -1,4 +1,4 @@
-<!DOCTYPE html>  
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -317,16 +317,21 @@ function openSub(key,i,btn){
     v.src=url; p.classList.add("show"); p.scrollIntoView({behavior:"smooth",block:"center"}); v.play().catch(function(){});
     return;
   }
-  // presentation (PDF) + assessment/data (HTML) open in that phone's in-app viewer
-  var screen=btn.closest(".screen");
-  var dv=screen.querySelector(".docviewer");
-  var lang=(screen.querySelector("#view-R")?"fr":"en");
-  var ss=sub[lang]||sub.en;
-  dv.querySelector(".dvtitle").textContent=(ss?ss.title:sub.key)+" \u00B7 "+m[lang].title;
-  dv.querySelector(".dvframe").src=url;
-  dv.classList.add("show");
+  // presentation (PDF) + assessment/data (HTML) open in BOTH phones' viewers
+  var screens=document.querySelectorAll(".screen");
+  Array.prototype.forEach.call(screens,function(sc){
+    var dv=sc.querySelector(".docviewer"); if(!dv) return;
+    var lang=sc.querySelector("#view-R")?"fr":"en";
+    var ss=sub[lang]||sub.en;
+    dv.querySelector(".dvtitle").textContent=(ss?ss.title:key)+" \u00B7 "+(m[lang]?m[lang].title:m.folder);
+    dv.querySelector(".dvframe").src=url;
+    dv.classList.add("show");
+  });
 }
-function closeDoc(btn){ var dv=btn.closest(".docviewer"); dv.classList.remove("show"); dv.querySelector(".dvframe").src="about:blank"; }
+function closeDoc(btn){
+  var all=document.querySelectorAll(".docviewer");
+  Array.prototype.forEach.call(all,function(dv){ dv.classList.remove("show"); var f=dv.querySelector(".dvframe"); if(f) f.src="about:blank"; });
+}
 function closePlayer(btn){ var p=btn.closest(".player"), v=p.querySelector("video"); v.pause(); v.removeAttribute("src"); v.load(); p.classList.remove("show"); }
 
 /* nav wiring */
