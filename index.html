@@ -1,4 +1,4 @@
-<!DOCTYPE html>    
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -94,6 +94,11 @@
   .player.show{display:block;animation:fade .3s ease;}
   .player video{width:100%;display:block;max-height:40vh;background:#000;}
   .player .pbar{background:var(--navy-900);color:#fff;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;font:600 11px var(--body);}
+  .docviewer{position:absolute;inset:0;background:#222;z-index:60;display:none;flex-direction:column;}
+  .docviewer.show{display:flex;}
+  .dvbar{flex:0 0 auto;background:var(--navy-900);color:#fff;padding:10px 13px;display:flex;align-items:center;justify-content:space-between;font:600 11.5px var(--body);}
+  .dvbar button{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:8px;padding:5px 11px;font:600 11px var(--body);cursor:pointer;}
+  .docviewer .dvframe{flex:1 1 auto;width:100%;border:none;background:#525659;}
   .player .pbar button{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:8px;padding:5px 10px;font:600 11px var(--body);cursor:pointer;}
 
   footer{background:var(--navy-900);color:rgba(255,255,255,.7);text-align:center;padding:18px;font:400 10.5px var(--body);}
@@ -145,6 +150,7 @@
         </header>
         <div class="body" id="scroll-L"><div id="view-L"></div><footer id="foot-L"></footer></div>
         <div class="cursor cursor-en" id="cur-L"></div>
+        <div class="docviewer"><div class="dvbar"><span class="dvtitle">Presentation</span><button onclick="closeDoc(this)">Close &times;</button></div><iframe class="dvframe" title="viewer"></iframe></div>
       </div></div>
     </div>
     <div class="col">
@@ -157,6 +163,7 @@
         </header>
         <div class="body" id="scroll-R"><div id="view-R"></div><footer id="foot-R"></footer></div>
         <div class="cursor cursor-fr" id="cur-R"></div>
+        <div class="docviewer"><div class="dvbar"><span class="dvtitle">Presentation</span><button onclick="closeDoc(this)">Close &times;</button></div><iframe class="dvframe" title="viewer"></iframe></div>
       </div></div>
     </div>
   </div>
@@ -310,8 +317,16 @@ function openSub(key,i,btn){
     v.src=url; p.classList.add("show"); p.scrollIntoView({behavior:"smooth",block:"center"}); v.play().catch(function(){});
     return;
   }
-  window.open(url,"_blank");
+  // presentation (PDF) + assessment/data (HTML) open in that phone's in-app viewer
+  var screen=btn.closest(".screen");
+  var dv=screen.querySelector(".docviewer");
+  var lang=(screen.querySelector("#view-R")?"fr":"en");
+  var ss=sub[lang]||sub.en;
+  dv.querySelector(".dvtitle").textContent=(ss?ss.title:sub.key)+" \u00B7 "+m[lang].title;
+  dv.querySelector(".dvframe").src=url;
+  dv.classList.add("show");
 }
+function closeDoc(btn){ var dv=btn.closest(".docviewer"); dv.classList.remove("show"); dv.querySelector(".dvframe").src="about:blank"; }
 function closePlayer(btn){ var p=btn.closest(".player"), v=p.querySelector("video"); v.pause(); v.removeAttribute("src"); v.load(); p.classList.remove("show"); }
 
 /* nav wiring */
